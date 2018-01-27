@@ -16,25 +16,44 @@ var grid = [ 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
 var tiles = document.querySelectorAll('.game-board div'),
     chooseX = document.querySelector('#x'),
-    chooseO = document.querySelector('#o'),
-    currentPlayer = 'X';
+    chooseO = document.querySelector('#o');
 
-tiles.forEach(function(tile, i) {
-  tile.addEventListener('click', function() {
-    if (grid[i] === 0) {
-      if (currentPlayer === 'X') {
-        grid[i] = 1; // X = 1 on game board
-      } else {
-        grid[i] = -1; // O = -1 on game board
-      }
-      
-      tile.innerHTML = currentPlayer;
-      currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
-    }
-    console.log(grid);
-    checkWin(grid);
+function choosePlayer() {
+  var currentPlayer = 'X';
+  
+  chooseX.addEventListener('click', function() {
+    currentPlayer = 'X';
   });
-});
+  
+  chooseO.addEventListener('click', function() {
+    currentPlayer = 'O';
+  });
+  
+  startGame(currentPlayer);
+}
+
+function startGame(player) {
+  
+  var currentPlayer = player;
+  
+  tiles.forEach(function(tile, i) {
+
+    tile.addEventListener('click', function() {
+      if (grid[i] === 0) {
+        if (currentPlayer === 'X') {
+          grid[i] = 1; // X = 1 on game board
+        } else {
+          grid[i] = -1; // O = -1 on game board
+        }
+
+        tile.innerHTML = currentPlayer;
+        currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+      }
+      console.log(grid);
+      checkWin(grid);
+    });
+  });
+}
 
 function checkWin(gameGrid) {
 //  console.log('checking...');
@@ -74,6 +93,9 @@ function reset(winner) {
     grid = [ 0, 0, 0, 0, 0, 0, 0, 0, 0];
   });
 }
+
+
+choosePlayer();
 
 // TODO: Check for tie, Make symbol selectable by player, and make computer play
 
