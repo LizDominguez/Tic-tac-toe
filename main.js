@@ -19,22 +19,23 @@ var tiles = document.querySelectorAll('.game-board div'),
     chooseO = document.querySelector('#o'),
     currentPlayer = 'X';
 
-function choosePlayer() {
+function choosePlayerSymbol() {
   
   chooseX.addEventListener('click', function() {
     currentPlayer = 'X';
+    clearGameBoard();
   });
   
   chooseO.addEventListener('click', function() {
     currentPlayer = 'O';
+    clearGameBoard();
   });
   
   startGame();
 }
 
 function startGame() {
-
-  
+ 
   tiles.forEach(function(tile, i) {
 
     tile.addEventListener('click', function() {
@@ -46,6 +47,7 @@ function startGame() {
         }
 
         tile.innerHTML = currentPlayer;
+        computerPlays();
         currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
       }
       console.log(grid);
@@ -55,7 +57,7 @@ function startGame() {
 }
 
 function checkWin(gameGrid) {
-//  console.log('checking...');
+
   var count = 0;
   
   for (var i = 0; i < wins.length; i++) {
@@ -70,15 +72,15 @@ function checkWin(gameGrid) {
     
     if (count === 3) {
       console.log('X WINS');
-      reset('X');
+      announceWin('X');
     } else if (count === -3) {
       console.log('O WINS');
-      reset('O');
+      announceWin('O');
     }
   } 
 }
 
-function reset(winner) {
+function announceWin(winner) {
   var winMsg = document.querySelector('.win');
   winMsg.innerHTML = '<p>' + winner + ' Wins!</p> <button>Play Again?</button>';
   var playAgainBtn = document.querySelector('.win button');
@@ -86,14 +88,37 @@ function reset(winner) {
   
   playAgainBtn.addEventListener('click', function() {
     winMsg.style.display = 'none';
-    tiles.forEach(function(tile, i) {  
-      tile.innerHTML = '';
-    });
-    grid = [ 0, 0, 0, 0, 0, 0, 0, 0, 0];
+    clearGameBoard();
   });
 }
 
-choosePlayer();
+function clearGameBoard() {
+  tiles.forEach(function(tile, i) {  
+      tile.innerHTML = '';
+    });
+  grid = [ 0, 0, 0, 0, 0, 0, 0, 0, 0];
+}
 
-// TODO: Check for tie, Make symbol selectable by player, and make computer play
+function computerPlays() {
+  
+  currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+  
+  for (var i = 0; i < tiles.length; i++) {
+     if (grid[i] === 0) {
+        if (currentPlayer === 'X') {
+          grid[i] = 1; // X = 1 on game board
+        } else {
+          grid[i] = -1; // O = -1 on game board
+        }
+        tiles[i].innerHTML = currentPlayer;  
+        break;
+      }
+      console.log(grid);
+      checkWin(grid);
+  }
+}
+
+choosePlayerSymbol();
+
+// TODO: make computer win
 
