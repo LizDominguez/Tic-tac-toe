@@ -51,12 +51,13 @@ function startGame() {
         currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
       }
       console.log(grid);
-      checkWin(grid);
+      checkForWinner(grid);
+      checkForTie();
     });
   });
 }
 
-function checkWin(gameGrid) {
+function checkForWinner(gameGrid) {
 
   var count = 0;
   
@@ -80,9 +81,29 @@ function checkWin(gameGrid) {
   } 
 }
 
+function checkForTie() {
+  var count = 0;
+  
+  for (var i = 0; i < grid.length; i++) {
+    if (grid[i] !== 0) {
+      count++;
+      if (count === grid.length - 1) {
+        announceWin('tie');
+      }  
+    }
+  }
+  count = 0;
+}
+
 function announceWin(winner) {
   var winMsg = document.querySelector('.win');
-  winMsg.innerHTML = '<p>' + winner + ' Wins!</p> <button>Play Again?</button>';
+  
+  if (winner === 'tie') {
+    winMsg.innerHTML = '<p> It\'s a' + winner + '!</p> <button>Play Again?</button>';
+  } else {
+    winMsg.innerHTML = '<p>' + winner + ' Wins!</p> <button>Play Again?</button>';
+  }
+  
   var playAgainBtn = document.querySelector('.win button');
   winMsg.style.display = 'block';
   
@@ -102,19 +123,28 @@ function clearGameBoard() {
 function computerPlays() {
   
   currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+  var playIndex = checkPossibleWin();
   
-  for (var i = 0; i < tiles.length; i++) {
-     if (grid[i] === 0) {
-        if (currentPlayer === 'X') {
-          grid[i] = 1; // X = 1 on game board
-        } else {
-          grid[i] = -1; // O = -1 on game board
+  if (grid[playIndex] === 0) {
+    if (currentPlayer === 'X') {
+      grid[playIndex] = 1; // X = 1 on game board
+    } else {
+      grid[playIndex] = -1; // O = -1 on game board
+    }
+    tiles[playIndex].innerHTML = currentPlayer;  
+  } 
+}
+
+function checkPossibleWin() {
+  
+  for (var i = 0; i < wins.length; i++) {
+    for (var j = 0; j < 3; j++) {
+      if (grid[wins[i][j]] === 0) {
+        if (j === 2) {
+          return wins[i][j];
         }
-        tiles[i].innerHTML = currentPlayer;  
-        break;
-      }
-      console.log(grid);
-      checkWin(grid);
+      } 
+    }
   }
 }
 
