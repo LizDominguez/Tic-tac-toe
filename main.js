@@ -16,10 +16,10 @@ var grid = [ 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
 var tiles = document.querySelectorAll('.game-board div'),
     chooseX = document.querySelector('#x'),
-    chooseO = document.querySelector('#o');
+    chooseO = document.querySelector('#o'),
+    currentPlayer = 'X';
 
 function choosePlayer() {
-  var currentPlayer = 'X';
   
   chooseX.addEventListener('click', function() {
     currentPlayer = 'X';
@@ -29,12 +29,11 @@ function choosePlayer() {
     currentPlayer = 'O';
   });
   
-  startGame(currentPlayer);
+  startGame();
 }
 
-function startGame(player) {
-  
-  var currentPlayer = player;
+function startGame() {
+
   
   tiles.forEach(function(tile, i) {
 
@@ -93,7 +92,6 @@ function reset(winner) {
     grid = [ 0, 0, 0, 0, 0, 0, 0, 0, 0];
   });
 }
-
 
 choosePlayer();
 
