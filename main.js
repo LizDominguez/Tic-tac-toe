@@ -12,7 +12,7 @@ var wins = [
   [2, 4, 6]
 ];
 
-var grid = [ 0, 0, 0, 0, 0, 0, 0, 0, 0];
+var grid = [0, 1, 2, 3, 4, 5, 6, 7, 8];
 
 var tiles = document.querySelectorAll('.game-board div'),
     chooseX = document.querySelector('#x'),
@@ -39,13 +39,8 @@ function startGame() {
   tiles.forEach(function(tile, i) {
 
     tile.addEventListener('click', function() {
-      if (grid[i] === 0) {
-        if (currentPlayer === 'X') {
-          grid[i] = 1; // X = 1 on game board
-        } else {
-          grid[i] = -1; // O = -1 on game board
-        }
-
+      if (typeof grid[i] === 'number') {
+        grid[i] = currentPlayer;
         tile.innerHTML = currentPlayer;
         computerPlays();
         currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
@@ -64,9 +59,9 @@ function checkForWinner(gameGrid) {
   for (var i = 0; i < wins.length; i++) {
     count = 0;
     for (var j = 0; j < 3; j++) {
-      if (grid[wins[i][j]] === 1) {
+      if (grid[wins[i][j]] === 'X') {
         count += 1;
-      } else if (grid[wins[i][j]] === -1) {
+      } else if (grid[wins[i][j]] === 'O') {
         count -= 1;
       }
     }
@@ -85,7 +80,7 @@ function checkForTie() {
   var count = 0;
   
   for (var i = 0; i < grid.length; i++) {
-    if (grid[i] !== 0) {
+    if (typeof grid[i] !== 'number') {
       count++;
       if (count === grid.length - 1) {
         announceWin('tie');
@@ -99,7 +94,7 @@ function announceWin(winner) {
   var winMsg = document.querySelector('.win');
   
   if (winner === 'tie') {
-    winMsg.innerHTML = '<p> It\'s a' + winner + '!</p> <button>Play Again?</button>';
+    winMsg.innerHTML = '<p> It\'s a ' + winner + '!</p> <button>Play Again?</button>';
   } else {
     winMsg.innerHTML = '<p>' + winner + ' Wins!</p> <button>Play Again?</button>';
   }
@@ -117,7 +112,7 @@ function clearGameBoard() {
   tiles.forEach(function(tile, i) {  
       tile.innerHTML = '';
     });
-  grid = [ 0, 0, 0, 0, 0, 0, 0, 0, 0];
+  grid = [0, 1, 2, 3, 4, 5, 6, 7, 8];
 }
 
 function computerPlays() {
@@ -125,11 +120,11 @@ function computerPlays() {
   currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
   var playIndex = checkPossibleWin();
   
-  if (grid[playIndex] === 0) {
+  if (typeof grid[playIndex] === 'number') {
     if (currentPlayer === 'X') {
-      grid[playIndex] = 1; // X = 1 on game board
+      grid[playIndex] = 'X'; 
     } else {
-      grid[playIndex] = -1; // O = -1 on game board
+      grid[playIndex] = 'O'; 
     }
     tiles[playIndex].innerHTML = currentPlayer;  
   } 
@@ -139,7 +134,7 @@ function checkPossibleWin() {
   
   for (var i = 0; i < wins.length; i++) {
     for (var j = 0; j < 3; j++) {
-      if (grid[wins[i][j]] === 0) {
+      if (typeof grid[wins[i][j]] === 'number') {
         if (j === 2) {
           return wins[i][j];
         }
